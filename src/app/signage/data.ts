@@ -41,7 +41,7 @@ export const categorySlides: Record<'hair' | 'shave' | 'other', CategorySlideDat
       'From signature gentleman cuts to colour, texture, and restoration — your crown, refined by hands trained for years.',
     upsell:
       'Not sure where to start? Ask your barber to recommend a ritual built around your hair, your routine, your week.',
-    bg: '/signage/cat-hair.jpg',
+    bg: '/brand_asset/hair_spa.jpeg',
     items: [
       { name: 'Gentleman Grooming', desc: 'Our signature ritual — cut, wash, finish.' },
       { name: 'Hair Tattoo · Single & Double Side', desc: 'Bold lines, hand-carved by senior artists.' },
@@ -61,7 +61,7 @@ export const categorySlides: Record<'hair' | 'shave' | 'other', CategorySlideDat
       'Hot towel, sharp blade, steady hand. A practice older than time — performed the way it was meant to be performed.',
     upsell:
       'Pair a Traditional Shave with our hot towel ritual — the small upgrade that defines the morning.',
-    bg: '/signage/cat-shave.jpg',
+    bg: '/brand_asset/charcoal.jpeg',
     items: [
       { name: 'Shaving', desc: 'Clean, comfortable — the daily essential.' },
       { name: 'Traditional Shaving', desc: 'Straight razor. Warm lather. A ceremony.' },
@@ -77,7 +77,7 @@ export const categorySlides: Record<'hair' | 'shave' | 'other', CategorySlideDat
       'The details most overlook — and the ones that change how a man moves through his day. Performed with care, and a measure of ceremony.',
     upsell:
       'Add a 15-minute ritual to any cut — a Charcoal Cleanse or Nose Wax slips beautifully into your visit.',
-    bg: '/signage/cat-other.jpg',
+    bg: '/brand_asset/ear_candle.jpeg',
     items: [
       { name: 'Men Massage Service', desc: 'Face & back relief, after a long week.' },
       { name: 'Nose Wax · Ear Wax', desc: 'Discreet detail work. Always.' },
@@ -94,32 +94,32 @@ export const packages = [
     name: 'Redbox Royal Grooming',
     tag: 'The full coronation.',
     items: 'Haircut · Face & Back Massage · Charcoal Cleansing · Traditional Shaving · Nose & Ear Waxing',
-    image: '/signage/royal.jpg',
+    image: '/brand_asset/premium1.jpeg',
     hero: true,
   },
   {
     name: 'Redbox Duxe Grooming',
     tag: 'Deep cleanse, fully restored.',
     items: 'Haircut · Charcoal Deep Cleansing · Face Scrub · Hair Spa',
-    image: '/signage/duxe.jpg',
+    image: '/brand_asset/premium2.jpeg',
   },
   {
     name: 'Redbox Earl Grooming',
     tag: 'Quiet luxury, well earned.',
     items: 'Haircut · Face & Back Massage · Hair Spa',
-    image: '/signage/earl.jpg',
+    image: '/brand_asset/premium3.jpeg',
   },
   {
     name: 'Redbox Baron Grooming',
     tag: 'The signature cut.',
     items: 'Haircut / Fade / Long Trim',
-    image: '/signage/baron.jpg',
+    image: '/brand_asset/ear_singeing.jpeg',
   },
   {
     name: 'Redbox Noble Grooming',
     tag: 'Classic, with finishing touches.',
     items: 'Haircut · Face & Back Massage · Ear Singeing',
-    image: '/signage/noble.jpg',
+    image: '/brand_asset/nose_wax.jpeg',
   },
 ];
 
@@ -146,7 +146,7 @@ export const specialServices = [
     tagline: 'The shop, brought to you.',
     body: 'For the father who cannot leave, the executive between meetings, or the child more comfortable at home — a senior barber arrives with the full kit. The same ritual, in your space.',
     note: 'Booked one day in advance · within service area',
-    image: '/signage/home.png',
+    image: '/brand_asset/home_service.png',
   },
   {
     id: 'wedding',
@@ -155,6 +155,6 @@ export const specialServices = [
     tagline: 'Groomed for the moment.',
     body: 'On the day that will be photographed forever, the smallest details matter most. Our master barbers attend to the groom and his line — on location, before the first guest arrives.',
     note: 'Full grooming · groom & groomsmen · location service',
-    image: '/signage/wedding.png',
+    image: '/brand_asset/wedding_service.png',
   },
 ];
