@@ -1,4 +1,5 @@
 export type SlideId =
+  | 'opening'
   | 'hair'
   | 'shave'
   | 'other'
@@ -12,6 +13,7 @@ export type SlideId =
 export const SLIDE_DURATION_MS = 12000;
 
 export const slides: { id: SlideId; index: string }[] = [
+  { id: 'opening', index: '00' },
   { id: 'hair', index: '01' },
   { id: 'shave', index: '02' },
   { id: 'other', index: '03' },
