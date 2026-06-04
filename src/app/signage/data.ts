@@ -5,7 +5,8 @@ export type SlideId =
   | 'packages'
   | 'membership'
   | 'reservation'
-  | 'special';
+  | 'special'
+  | 'promo';
 
 export const SLIDE_DURATION_MS = 12000;
 
@@ -17,6 +18,7 @@ export const slides: { id: SlideId; index: string }[] = [
   { id: 'membership', index: '05' },
   { id: 'reservation', index: '06' },
   { id: 'special', index: '07' },
+  { id: 'promo', index: '08' },
 ];
 
 export type ServiceItem = { name: string; desc: string };
