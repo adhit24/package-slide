@@ -4,40 +4,43 @@ import { motion } from 'framer-motion';
 import { packages } from '../data';
 
 const spring = { type: 'spring' as const, stiffness: 100, damping: 22 };
-const royal = packages[0];
-const supporting = packages.slice(1);
 const romans = ['I', 'II', 'III', 'IV', 'V'];
 
-/* ── Layout grid (1920 x 1080) ────────────────────────────────────
-   Top bar:       80 – 144
-   Header band:   180 – 380   (200h)
-   Content band:  420 – 950   (530h)
-   Bottom bar:    1000 – 1020
-   Side margins:  140
-─────────────────────────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   HORIZONTAL GALLERY — 1920 × 1080
+   Margins : 140px each side → content width 1640px
+   Header  : y 190–330
+   Cards   : y 350–960  (610px tall)
+   Card widths:
+     Royal (hero) : 440px
+     Others × 4   : 300px each
+     Gaps × 4     : 25px each
+     Total        : 440 + 1200 + 100 = 1740 → adjusted below
+───────────────────────────────────────────────────────────────── */
+
+const CARD_GAP = 22;
+const HERO_W = 430;
+
+// Content width = 1920 - 140*2 = 1640
+// Hero + 4cards + 4gaps = 1640
+// Hero = 430, gaps = 4×22 = 88, remaining = 1640-430-88 = 1122, per card = 280.5 → 280
+const STD_W = 280;
+const CARD_TOP = 350;
+const CARD_H = 610;
+const PHOTO_H = 390;
 
 export function PackagesSlide() {
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
-      {/* Layered atmospheric background */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `url(${royal.image})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(40px) brightness(0.32) saturate(0.55)',
-          transform: 'scale(1.1)',
-        }}
-      />
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(11,11,13,0.82)' }} />
+
+      {/* ── Atmospheric base ─────────────────────────────── */}
+      <div style={{ position: 'absolute', inset: 0, backgroundColor: 'var(--bg-obsidian)' }} />
       <div
         style={{
           position: 'absolute',
           inset: 0,
           backgroundImage:
-            'repeating-linear-gradient(45deg, rgba(184,149,74,0.04) 0 1px, transparent 1px 90px), repeating-linear-gradient(-45deg, rgba(184,149,74,0.04) 0 1px, transparent 1px 90px)',
+            'repeating-linear-gradient(45deg, rgba(184,149,74,0.035) 0 1px, transparent 1px 80px), repeating-linear-gradient(-45deg, rgba(184,149,74,0.035) 0 1px, transparent 1px 80px)',
         }}
       />
       <div
@@ -45,32 +48,29 @@ export function PackagesSlide() {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse 1200px 500px at 50% -150px, rgba(184,149,74,0.16), transparent 60%)',
+            'radial-gradient(ellipse 1400px 600px at 50% -200px, rgba(184,149,74,0.12), transparent 60%)',
         }}
       />
 
+      {/* Ghost numeral */}
       <span className="ghost-numeral" style={{ bottom: -140, right: -50 }}>04</span>
 
-      {/* ═══ HEADER BAND (y 180–380) ═════════════════════════════ */}
+      {/* ══ HEADER ═══════════════════════════════════════════ */}
       <div
         style={{
           position: 'absolute',
-          top: 200,
+          top: 190,
           left: 140,
           right: 140,
           textAlign: 'center',
         }}
       >
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.1 }}
+          transition={{ ...spring, delay: 0.08 }}
           className="font-mono"
-          style={{
-            fontSize: 18,
-            color: 'var(--accent-gold)',
-            letterSpacing: '0.42em',
-          }}
+          style={{ fontSize: 16, color: 'var(--accent-gold)', letterSpacing: '0.45em' }}
         >
           The Grooming Collection
         </motion.div>
@@ -78,29 +78,23 @@ export function PackagesSlide() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.25, duration: 0.5 }}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 24,
-            marginTop: 16,
-          }}
+          transition={{ delay: 0.22, duration: 0.5 }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, marginTop: 14 }}
         >
-          <OrnamentRule width={120} />
-          <CrownEmblem />
-          <OrnamentRule width={120} />
+          <HairlineFade width={220} />
+          <DiamondOrn />
+          <HairlineFade width={220} />
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.32 }}
+          transition={{ ...spring, delay: 0.3 }}
           className="font-display"
           style={{
-            fontSize: 64,
-            lineHeight: 1.05,
-            margin: '14px 0 0',
+            fontSize: 54,
+            lineHeight: 1.08,
+            margin: '12px 0 0',
             color: 'var(--text-ivory)',
             letterSpacing: '-0.015em',
           }}
@@ -110,360 +104,267 @@ export function PackagesSlide() {
             Five Crowns.
           </span>
         </motion.h1>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.55, duration: 0.6 }}
-          className="font-display-italic"
-          style={{
-            fontSize: 19,
-            color: 'var(--text-smoke)',
-            marginTop: 14,
-          }}
-        >
-          Each ritual ninety minutes — every detail considered.
-        </motion.div>
       </div>
 
-      {/* ═══ CONTENT BAND (y 420–950) ════════════════════════════ */}
-
-      {/* ── ROYAL SHOWCASE (left) ────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ ...spring, delay: 0.45 }}
-        style={{
-          position: 'absolute',
-          top: 420,
-          left: 140,
-          width: 900,
-          height: 530,
-          padding: 5,
-          background:
-            'linear-gradient(135deg, rgba(184,149,74,0.6) 0%, rgba(184,149,74,0.18) 50%, rgba(184,149,74,0.6) 100%)',
-          boxShadow: '0 40px 100px rgba(0,0,0,0.7), 0 0 0 1px rgba(184,149,74,0.3)',
-        }}
-      >
-        <div
-          style={{
-            width: '100%',
-            height: '100%',
-            background: 'var(--bg-charcoal)',
-            display: 'grid',
-            gridTemplateColumns: '340px 1fr',
-            position: 'relative',
-          }}
-        >
-          <CornerBracket pos="tl" />
-          <CornerBracket pos="tr" />
-          <CornerBracket pos="bl" />
-          <CornerBracket pos="br" />
-
-          {/* Photo */}
-          <div style={{ position: 'relative', overflow: 'hidden' }}>
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: `url(${royal.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                filter: 'grayscale(0.55) brightness(0.85) sepia(0.15) contrast(1.05)',
-              }}
-            />
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background:
-                  'radial-gradient(circle at 50% 60%, transparent 30%, rgba(11,11,13,0.55) 100%)',
-              }}
-            />
-            <div
-              className="font-display-italic"
-              style={{
-                position: 'absolute',
-                top: 26,
-                left: 26,
-                fontSize: 56,
-                color: 'var(--accent-gold)',
-                opacity: 0.92,
-                lineHeight: 1,
-              }}
-            >
-              {romans[0]}
-            </div>
-            <div
-              className="font-mono"
-              style={{
-                position: 'absolute',
-                bottom: 22,
-                left: 26,
-                fontSize: 12,
-                color: 'var(--accent-gold)',
-                letterSpacing: '0.32em',
-              }}
-            >
-              The Showcase
-            </div>
-          </div>
-
-          {/* Content */}
-          <div
-            style={{
-              padding: '36px 40px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 0,
-              minWidth: 0,
-            }}
-          >
-            <div
-              className="font-mono"
-              style={{ fontSize: 12, color: 'var(--accent-gold)', letterSpacing: '0.32em' }}
-            >
-              Premier Ritual
-            </div>
-
-            <div
-              className="font-section"
-              style={{
-                fontSize: 36,
-                color: 'var(--text-ivory)',
-                textTransform: 'uppercase',
-                marginTop: 10,
-                lineHeight: 1.05,
-                letterSpacing: '-0.005em',
-              }}
-            >
-              Redbox{' '}
-              <span style={{ color: 'var(--accent-gold)' }}>Royal Grooming</span>
-            </div>
-
-            <div
-              className="font-display-italic"
-              style={{ fontSize: 22, color: 'var(--text-ivory)', marginTop: 8 }}
-            >
-              {royal.tag}
-            </div>
-
-            <div className="hairline-gold" style={{ height: 1, margin: '20px 0 14px' }} />
-
-            <div
-              className="font-mono"
-              style={{
-                fontSize: 11,
-                color: 'var(--accent-gold)',
-                letterSpacing: '0.32em',
-                marginBottom: 8,
-              }}
-            >
-              The Inclusions
-            </div>
-
-            <RoyalItemList items={royal.items.split(' · ')} />
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ── 4 SUPPORTING LOTS (right) ────────────────────────── */}
+      {/* ══ CARD ROW ══════════════════════════════════════════ */}
       <div
         style={{
           position: 'absolute',
-          top: 420,
-          right: 140,
-          width: 620,
-          height: 530,
-          display: 'grid',
-          gridTemplateRows: 'repeat(4, 1fr)',
-          gap: 14,
+          top: CARD_TOP,
+          left: 140,
+          display: 'flex',
+          gap: CARD_GAP,
+          alignItems: 'flex-start',
         }}
       >
-        {supporting.map((p, i) => (
-          <motion.div
-            key={p.name}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ ...spring, delay: 0.6 + i * 0.1 }}
-            style={{
-              background: 'rgba(21,21,26,0.88)',
-              borderLeft: '2px solid rgba(184,149,74,0.55)',
-              padding: '14px 20px',
-              display: 'grid',
-              gridTemplateColumns: '46px 1fr 56px',
-              alignItems: 'center',
-              gap: 16,
-              backdropFilter: 'blur(4px)',
-              minWidth: 0,
-            }}
-          >
-            <div
-              className="font-display-italic"
+        {packages.map((pkg, i) => {
+          const isHero = i === 0;
+          const w = isHero ? HERO_W : STD_W;
+          return (
+            <motion.div
+              key={pkg.name}
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ...spring, delay: 0.38 + i * 0.08 }}
               style={{
-                fontSize: 34,
-                color: 'var(--accent-gold)',
-                lineHeight: 1,
-                opacity: 0.88,
-                textAlign: 'center',
+                width: w,
+                height: CARD_H,
+                position: 'relative',
+                flexShrink: 0,
+                /* Gold border on hero, subtle on others */
+                outline: isHero
+                  ? '1px solid rgba(184,149,74,0.7)'
+                  : '1px solid rgba(184,149,74,0.18)',
+                outlineOffset: isHero ? '-1px' : '-1px',
+                background: 'var(--bg-charcoal)',
               }}
             >
-              {romans[i + 1]}
-            </div>
+              {/* ── Photo ─────────────────────────────────── */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: isHero ? PHOTO_H + 40 : PHOTO_H,
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundImage: `url(${pkg.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: isHero
+                      ? 'brightness(0.82) contrast(1.06) saturate(0.9)'
+                      : 'grayscale(0.4) brightness(0.72) contrast(1.04)',
+                  }}
+                />
+                {/* Bottom fade into card */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: isHero ? 160 : 120,
+                    background:
+                      'linear-gradient(180deg, transparent 0%, var(--bg-charcoal) 100%)',
+                  }}
+                />
+                {/* Top vignette */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 80,
+                    background: 'linear-gradient(180deg, rgba(11,11,13,0.55) 0%, transparent 100%)',
+                  }}
+                />
 
-            <div style={{ minWidth: 0 }}>
-              <div
-                className="font-section"
-                style={{
-                  fontSize: 18,
-                  color: 'var(--text-ivory)',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.02em',
-                  lineHeight: 1.15,
-                }}
-              >
-                {p.name}
-              </div>
-              <div
-                className="font-display-italic"
-                style={{
-                  fontSize: 15,
-                  color: 'var(--accent-gold)',
-                  marginTop: 2,
-                  lineHeight: 1.2,
-                }}
-              >
-                {p.tag}
-              </div>
-              <div
-                className="font-body"
-                style={{
-                  fontSize: 12,
-                  color: 'var(--text-smoke)',
-                  marginTop: 6,
-                  lineHeight: 1.4,
-                }}
-              >
-                {p.items}
-              </div>
-            </div>
+                {/* Roman numeral — top-left of photo */}
+                <div
+                  className="font-display-italic"
+                  style={{
+                    position: 'absolute',
+                    top: 16,
+                    left: 20,
+                    fontSize: isHero ? 52 : 38,
+                    color: isHero ? 'var(--accent-gold)' : 'rgba(184,149,74,0.7)',
+                    lineHeight: 1,
+                    opacity: 0.9,
+                  }}
+                >
+                  {romans[i]}
+                </div>
 
-            <div
-              style={{
-                width: 56,
-                height: 56,
-                borderRadius: '50%',
-                backgroundImage: `url(${p.image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                border: '1px solid rgba(184,149,74,0.4)',
-                filter: 'grayscale(0.5) brightness(0.9)',
-              }}
-            />
-          </motion.div>
-        ))}
+                {/* Hero badge */}
+                {isHero && (
+                  <div
+                    className="font-mono"
+                    style={{
+                      position: 'absolute',
+                      top: 20,
+                      right: 18,
+                      fontSize: 10,
+                      color: 'var(--bg-obsidian)',
+                      background: 'var(--accent-gold)',
+                      padding: '5px 10px',
+                      letterSpacing: '0.28em',
+                    }}
+                  >
+                    PREMIER
+                  </div>
+                )}
+              </div>
+
+              {/* ── Text block ────────────────────────────── */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: isHero ? PHOTO_H + 40 : PHOTO_H,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  padding: isHero ? '14px 24px 20px' : '12px 18px 16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 0,
+                }}
+              >
+                {/* Package sub-name (e.g. "Royal Grooming") */}
+                <div
+                  className="font-section"
+                  style={{
+                    fontSize: isHero ? 22 : 16,
+                    color: isHero ? 'var(--accent-gold)' : 'var(--text-ivory)',
+                    textTransform: 'uppercase',
+                    lineHeight: 1.1,
+                    letterSpacing: isHero ? '0.01em' : '0.02em',
+                  }}
+                >
+                  {pkg.name.replace('Redbox ', '')}
+                </div>
+
+                {/* Tagline */}
+                <div
+                  className="font-display-italic"
+                  style={{
+                    fontSize: isHero ? 18 : 14,
+                    color: isHero ? 'var(--text-ivory)' : 'var(--text-smoke)',
+                    marginTop: 5,
+                    lineHeight: 1.2,
+                    opacity: 0.9,
+                  }}
+                >
+                  {pkg.tag}
+                </div>
+
+                {/* Hairline */}
+                <div
+                  style={{
+                    height: 1,
+                    background: isHero
+                      ? 'rgba(184,149,74,0.45)'
+                      : 'rgba(184,149,74,0.2)',
+                    margin: isHero ? '12px 0 10px' : '9px 0 8px',
+                  }}
+                />
+
+                {/* Items */}
+                <div
+                  className="font-mono"
+                  style={{
+                    fontSize: isHero ? 11 : 9.5,
+                    color: isHero ? 'var(--text-smoke)' : 'rgba(122,122,130,0.8)',
+                    lineHeight: 1.65,
+                    letterSpacing: '0.14em',
+                  }}
+                >
+                  {pkg.items.split(/[·/]/).map((item, j) => (
+                    <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                      <span style={{ color: 'var(--accent-gold)', opacity: 0.6, fontSize: isHero ? 10 : 8 }}>—</span>
+                      {item.trim()}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Hero: bottom gold bar accent */}
+              {isHero && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    height: 3,
+                    background:
+                      'linear-gradient(90deg, transparent, var(--accent-gold) 30%, var(--accent-gold) 70%, transparent)',
+                  }}
+                />
+              )}
+            </motion.div>
+          );
+        })}
       </div>
+
+      {/* Footer label */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.9, duration: 0.6 }}
+        className="font-mono"
+        style={{
+          position: 'absolute',
+          bottom: 64,
+          left: 140,
+          right: 140,
+          textAlign: 'center',
+          fontSize: 13,
+          color: 'var(--text-smoke)',
+          letterSpacing: '0.32em',
+        }}
+      >
+        Ask your barber to recommend a ritual built for your week.
+      </motion.div>
     </div>
   );
 }
 
 /* ── Atoms ───────────────────────────────────────────────────── */
 
-function OrnamentRule({ width }: { width: number }) {
+function HairlineFade({ width }: { width: number }) {
   return (
     <div
       style={{
         width,
         height: 1,
         background:
-          'linear-gradient(90deg, transparent, var(--accent-gold) 30%, var(--accent-gold) 70%, transparent)',
+          'linear-gradient(90deg, transparent, var(--accent-gold) 40%, var(--accent-gold) 60%, transparent)',
       }}
     />
   );
 }
 
-function CrownEmblem() {
+function DiamondOrn() {
   return (
-    <svg width="40" height="28" viewBox="0 0 40 28" fill="none">
-      <path
-        d="M2 22 L2 12 L10 18 L14 6 L20 18 L26 6 L30 18 L38 12 L38 22 Z"
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <rect
+        x="7"
+        y="0.5"
+        width="9"
+        height="9"
+        transform="rotate(45 7 7)"
         fill="none"
         stroke="var(--accent-gold)"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
+        strokeWidth="1"
       />
-      <path d="M2 24 L38 24" stroke="var(--accent-gold)" strokeWidth="1.2" />
-      <circle cx="14" cy="4" r="1.2" fill="var(--accent-gold)" />
-      <circle cx="20" cy="2" r="1.5" fill="var(--accent-gold)" />
-      <circle cx="26" cy="4" r="1.2" fill="var(--accent-gold)" />
+      <rect x="5.5" y="5.5" width="3" height="3" transform="rotate(45 7 7)" fill="var(--accent-gold)" />
     </svg>
-  );
-}
-
-function CornerBracket({ pos }: { pos: 'tl' | 'tr' | 'bl' | 'br' }) {
-  const size = 20;
-  const offset = 10;
-  const style: React.CSSProperties = {
-    position: 'absolute',
-    width: size,
-    height: size,
-    borderColor: 'var(--accent-gold)',
-    borderStyle: 'solid',
-    borderWidth: 0,
-    pointerEvents: 'none',
-    zIndex: 2,
-  };
-  if (pos.includes('t')) {
-    style.top = offset;
-    style.borderTopWidth = 1;
-  } else {
-    style.bottom = offset;
-    style.borderBottomWidth = 1;
-  }
-  if (pos.includes('l')) {
-    style.left = offset;
-    style.borderLeftWidth = 1;
-  } else {
-    style.right = offset;
-    style.borderRightWidth = 1;
-  }
-  return <div style={style} />;
-}
-
-function RoyalItemList({ items }: { items: string[] }) {
-  return (
-    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-      {items.map((item, i) => (
-        <motion.li
-          key={item}
-          initial={{ opacity: 0, x: 6 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ ...spring, delay: 0.7 + i * 0.06 }}
-          className="font-item"
-          style={{
-            fontSize: 14,
-            color: 'var(--text-ivory)',
-            padding: '4px 0',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 12,
-            lineHeight: 1.3,
-          }}
-        >
-          <span
-            className="font-mono"
-            style={{
-              fontSize: 10,
-              color: 'var(--accent-gold)',
-              opacity: 0.65,
-              minWidth: 22,
-            }}
-          >
-            0{i + 1}
-          </span>
-          <span>{item}</span>
-        </motion.li>
-      ))}
-    </ul>
   );
 }
