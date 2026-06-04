@@ -105,7 +105,7 @@ export function MembershipSlide() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/signage/member-card.png"
+          src="/brand_asset/card.png"
           alt="Redbox Member Card"
           style={{ width: '100%', height: 'auto', display: 'block' }}
         />
