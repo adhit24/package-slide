@@ -10,6 +10,7 @@ import { MembershipSlide } from './components/MembershipSlide';
 import { ReservationSlide } from './components/ReservationSlide';
 import { SpecialServicesSlide } from './components/SpecialServicesSlide';
 import { PromoStudentSlide } from './components/PromoStudentSlide';
+import { ProductSlide } from './components/ProductSlide';
 
 export default function SignagePage() {
   const [active, setActive] = useState(() => {
@@ -67,6 +68,7 @@ export default function SignagePage() {
             {current.id === 'reservation' && <ReservationSlide />}
             {current.id === 'special' && <SpecialServicesSlide />}
             {current.id === 'promo' && <PromoStudentSlide />}
+            {current.id === 'product' && <ProductSlide />}
           </motion.div>
         </AnimatePresence>
 
