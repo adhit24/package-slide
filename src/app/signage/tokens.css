@@ -57,3 +57,25 @@
   background: #000;
   overflow: hidden;
 }
+
+/* Subtle scanline texture — adds premium broadcast feel */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.022) 3px,
+    rgba(0, 0, 0, 0.022) 4px
+  );
+  pointer-events: none;
+  z-index: 50;
+}
+
+/* Ken Burns wrapper — crop overflow when image scales up */
+.ken-burns-wrap {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}

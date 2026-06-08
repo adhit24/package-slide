@@ -1,11 +1,14 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { specialServices } from '../data';
 
-const spring = { type: 'spring' as const, stiffness: 100, damping: 22 };
+const spring = { type: 'spring' as const, duration: 0.55, bounce: 0.08 };
+const easeOut = [0.23, 1, 0.32, 1] as const;
 
 export function SpecialServicesSlide() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
       <div style={{ position: 'absolute', inset: 0, backgroundColor: 'var(--bg-obsidian)' }} />
@@ -22,18 +25,18 @@ export function SpecialServicesSlide() {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse 1200px 500px at 50% -150px, rgba(184,149,74,0.14), transparent 60%)',
+            'radial-gradient(ellipse 1200px 500px at 50% -150px, rgba(184,149,74,0.13), transparent 60%)',
         }}
       />
 
       <span className="ghost-numeral" style={{ bottom: -140, left: -50 }}>07</span>
 
-      {/* ── Header ───────────────────────────────────────────── */}
+      {/* ── Header ────────────────────────────────────── */}
       <div style={{ position: 'absolute', top: 200, left: 140, right: 140, textAlign: 'center' }}>
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.1 }}
+          transition={{ ...spring, delay: 0.08 }}
           className="font-mono"
           style={{ fontSize: 18, color: 'var(--accent-gold)', letterSpacing: '0.42em' }}
         >
@@ -41,9 +44,9 @@ export function SpecialServicesSlide() {
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.2 }}
+          transition={{ ...spring, delay: 0.18 }}
           className="font-display"
           style={{
             fontSize: 72,
@@ -61,8 +64,8 @@ export function SpecialServicesSlide() {
 
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
+          animate={{ opacity: 0.72 }}
+          transition={{ delay: 0.44, duration: 0.5, ease: easeOut }}
           className="font-display-italic"
           style={{ fontSize: 20, color: 'var(--text-smoke)', marginTop: 14 }}
         >
@@ -70,7 +73,7 @@ export function SpecialServicesSlide() {
         </motion.div>
       </div>
 
-      {/* ── Two service cards ────────────────────────────────── */}
+      {/* ── Two service cards ─────────────────────────── */}
       <div
         style={{
           position: 'absolute',
@@ -86,15 +89,15 @@ export function SpecialServicesSlide() {
         {specialServices.map((s, i) => (
           <motion.div
             key={s.id}
-            initial={{ opacity: 0, y: 18 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 0.4 + i * 0.12 }}
+            transition={{ ...spring, delay: 0.36 + i * 0.1 }}
             style={{
               position: 'relative',
               background: 'var(--bg-charcoal)',
               padding: 5,
               backgroundImage:
-                'linear-gradient(135deg, rgba(184,149,74,0.55) 0%, rgba(184,149,74,0.15) 50%, rgba(184,149,74,0.55) 100%)',
+                'linear-gradient(135deg, rgba(184,149,74,0.5) 0%, rgba(184,149,74,0.14) 50%, rgba(184,149,74,0.5) 100%)',
               boxShadow: '0 30px 80px rgba(0,0,0,0.6)',
             }}
           >
@@ -106,18 +109,23 @@ export function SpecialServicesSlide() {
                 display: 'grid',
                 gridTemplateRows: '260px 1fr',
                 position: 'relative',
+                overflow: 'hidden',
               }}
             >
-              {/* Photo */}
+              {/* Photo — Ken Burns per card */}
               <div style={{ position: 'relative', overflow: 'hidden' }}>
-                <div
+                <motion.div
+                  initial={{ scale: 1 }}
+                  animate={shouldReduceMotion ? {} : { scale: 1.07 }}
+                  transition={{ duration: 12, ease: 'linear' }}
                   style={{
                     position: 'absolute',
                     inset: 0,
                     backgroundImage: `url(${s.image})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    filter: 'grayscale(0.3) brightness(0.9) contrast(1.05) saturate(0.85)',
+                    filter: 'grayscale(0.25) brightness(0.88) contrast(1.06) saturate(0.85)',
+                    transformOrigin: 'center center',
                   }}
                 />
                 <div
@@ -125,7 +133,7 @@ export function SpecialServicesSlide() {
                     position: 'absolute',
                     inset: 0,
                     background:
-                      'linear-gradient(180deg, rgba(11,11,13,0) 50%, rgba(21,21,26,0.85) 100%)',
+                      'linear-gradient(180deg, rgba(11,11,13,0) 50%, rgba(21,21,26,0.88) 100%)',
                   }}
                 />
                 <div
@@ -168,19 +176,14 @@ export function SpecialServicesSlide() {
 
                 <div
                   className="font-body"
-                  style={{ fontSize: 16, color: 'var(--text-ivory)', opacity: 0.88, lineHeight: 1.55 }}
+                  style={{ fontSize: 16, color: 'var(--text-ivory)', opacity: 0.86, lineHeight: 1.55 }}
                 >
                   {s.body}
                 </div>
 
                 <div
                   className="font-mono"
-                  style={{
-                    marginTop: 16,
-                    fontSize: 11,
-                    color: 'var(--text-smoke)',
-                    letterSpacing: '0.28em',
-                  }}
+                  style={{ marginTop: 16, fontSize: 11, color: 'var(--text-smoke)', letterSpacing: '0.28em' }}
                 >
                   {s.note}
                 </div>
@@ -194,7 +197,7 @@ export function SpecialServicesSlide() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
+        transition={{ delay: 0.82, duration: 0.55, ease: easeOut }}
         className="font-mono"
         style={{
           position: 'absolute',

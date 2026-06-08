@@ -1,18 +1,21 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { bookingUrl, reservationFeatures } from '../data';
 
-const spring = { type: 'spring' as const, stiffness: 100, damping: 22 };
+const spring = { type: 'spring' as const, duration: 0.55, bounce: 0.08 };
+const easeOut = [0.23, 1, 0.32, 1] as const;
 
 const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
   bookingUrl
 )}&size=480x480&color=EFE9DC&bgcolor=15151A&qzone=1&format=png`;
 
 export function ReservationSlide() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
-      {/* Subtle dark canvas with geometric pattern */}
+      {/* Subtle dark canvas */}
       <div style={{ position: 'absolute', inset: 0, backgroundColor: 'var(--bg-obsidian)' }} />
       <div
         style={{
@@ -27,32 +30,28 @@ export function ReservationSlide() {
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(ellipse 900px 500px at 30% 50%, rgba(184,149,74,0.12), transparent 60%)',
+            'radial-gradient(ellipse 900px 500px at 30% 50%, rgba(184,149,74,0.11), transparent 60%)',
         }}
       />
 
       <span className="ghost-numeral" style={{ bottom: -140, right: -50 }}>06</span>
 
-      {/* ── HEADER (y 200) ───────────────────────────────────── */}
+      {/* ── HEADER ───────────────────────────────────── */}
       <div style={{ position: 'absolute', top: 200, left: 140, right: 140 }}>
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.1 }}
+          transition={{ ...spring, delay: 0.08 }}
           className="font-mono"
-          style={{
-            fontSize: 20,
-            color: 'var(--accent-gold)',
-            letterSpacing: '0.4em',
-          }}
+          style={{ fontSize: 20, color: 'var(--accent-gold)', letterSpacing: '0.4em' }}
         >
           Online Reservation
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.2 }}
+          transition={{ ...spring, delay: 0.18 }}
           className="font-display"
           style={{
             fontSize: 96,
@@ -64,11 +63,14 @@ export function ReservationSlide() {
         >
           Your seat,
           <br />
-          one scan <span className="font-display-italic" style={{ color: 'var(--accent-gold)' }}>away.</span>
+          one scan{' '}
+          <span className="font-display-italic" style={{ color: 'var(--accent-gold)' }}>
+            away.
+          </span>
         </motion.h1>
       </div>
 
-      {/* ── LEFT — Features list ─────────────────────────────── */}
+      {/* ── LEFT — Features list ─────────────────────── */}
       <div
         style={{
           position: 'absolute',
@@ -84,9 +86,9 @@ export function ReservationSlide() {
         {reservationFeatures.map((f, i) => (
           <motion.div
             key={f.n}
-            initial={{ opacity: 0, y: 14 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ ...spring, delay: 0.4 + i * 0.1 }}
+            transition={{ ...spring, delay: 0.38 + i * 0.09 }}
             style={{
               display: 'grid',
               gridTemplateColumns: '60px 1fr',
@@ -96,12 +98,7 @@ export function ReservationSlide() {
           >
             <div
               className="font-display-italic"
-              style={{
-                fontSize: 42,
-                color: 'var(--accent-gold)',
-                lineHeight: 1,
-                opacity: 0.85,
-              }}
+              style={{ fontSize: 42, color: 'var(--accent-gold)', lineHeight: 1, opacity: 0.85 }}
             >
               {f.n}
             </div>
@@ -135,11 +132,11 @@ export function ReservationSlide() {
         ))}
       </div>
 
-      {/* ── RIGHT — QR Frame ─────────────────────────────────── */}
+      {/* ── RIGHT — QR Frame ─────────────────────────── */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.94 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ ...spring, delay: 0.3 }}
+        transition={{ ...spring, delay: 0.28 }}
         style={{
           position: 'absolute',
           top: 520,
@@ -151,7 +148,7 @@ export function ReservationSlide() {
           style={{
             background: 'var(--bg-charcoal)',
             padding: 32,
-            boxShadow: '0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,149,74,0.45)',
+            boxShadow: '0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(184,149,74,0.4)',
             position: 'relative',
           }}
         >
@@ -160,23 +157,56 @@ export function ReservationSlide() {
             <CornerBracket key={p} pos={p} />
           ))}
 
-          <div className="font-mono" style={{ fontSize: 12, color: 'var(--accent-gold)', letterSpacing: '0.32em', textAlign: 'center', marginBottom: 14 }}>
+          <div
+            className="font-mono"
+            style={{
+              fontSize: 12,
+              color: 'var(--accent-gold)',
+              letterSpacing: '0.32em',
+              textAlign: 'center',
+              marginBottom: 14,
+            }}
+          >
             Scan to Reserve
           </div>
 
-          <div style={{ background: 'var(--text-ivory)', padding: 16 }}>
+          {/* QR code with scan-line animation */}
+          <div style={{ background: 'var(--text-ivory)', padding: 16, position: 'relative', overflow: 'hidden' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={qrSrc} alt="Scan to book" width={416} height={416} style={{ display: 'block', width: '100%', height: 'auto' }} />
+            <img
+              src={qrSrc}
+              alt="Scan to book"
+              width={416}
+              height={416}
+              style={{ display: 'block', width: '100%', height: 'auto' }}
+            />
+            {/* Scan line — sweeps top to bottom, loops */}
+            {!shouldReduceMotion && (
+              <motion.div
+                animate={{ y: [0, 416] }}
+                transition={{
+                  duration: 2.2,
+                  ease: easeOut,
+                  repeat: Infinity,
+                  repeatDelay: 1.4,
+                }}
+                style={{
+                  position: 'absolute',
+                  left: 0,
+                  right: 0,
+                  height: 3,
+                  background:
+                    'linear-gradient(180deg, transparent, rgba(184,149,74,0.75) 50%, transparent)',
+                  pointerEvents: 'none',
+                  top: 16,
+                }}
+              />
+            )}
           </div>
 
           <div
             className="font-display-italic"
-            style={{
-              fontSize: 22,
-              color: 'var(--text-ivory)',
-              textAlign: 'center',
-              marginTop: 18,
-            }}
+            style={{ fontSize: 22, color: 'var(--text-ivory)', textAlign: 'center', marginTop: 18 }}
           >
             redboxbarbershop.com
           </div>

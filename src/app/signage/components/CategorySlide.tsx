@@ -1,31 +1,42 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { CategorySlideData } from '../data';
 
-const spring = { type: 'spring' as const, stiffness: 100, damping: 22 };
+const spring = { type: 'spring' as const, duration: 0.55, bounce: 0.08 };
+const easeOut = [0.23, 1, 0.32, 1] as const;
 
 export function CategorySlide({ data }: { data: CategorySlideData }) {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
-      {/* Background image - right side dominant */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: `url(${data.bg})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center right',
-          filter: 'grayscale(0.5) brightness(0.55) contrast(1.05)',
-        }}
-      />
-      {/* Left dark gradient for text legibility */}
+
+      {/* Background image — Ken Burns subtle zoom toward right anchor */}
+      <div className="ken-burns-wrap">
+        <motion.div
+          initial={{ scale: 1 }}
+          animate={shouldReduceMotion ? {} : { scale: 1.06 }}
+          transition={{ duration: 12, ease: 'linear' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `url(${data.bg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center right',
+            filter: 'grayscale(0.45) brightness(0.52) contrast(1.08)',
+            transformOrigin: '70% 50%',
+          }}
+        />
+      </div>
+
+      {/* Left gradient — text legibility */}
       <div
         style={{
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(90deg, rgba(11,11,13,0.97) 0%, rgba(11,11,13,0.88) 38%, rgba(11,11,13,0.35) 70%, rgba(11,11,13,0.1) 100%)',
+            'linear-gradient(90deg, rgba(11,11,13,0.97) 0%, rgba(11,11,13,0.9) 38%, rgba(11,11,13,0.3) 68%, rgba(11,11,13,0.06) 100%)',
         }}
       />
 
@@ -35,53 +46,54 @@ export function CategorySlide({ data }: { data: CategorySlideData }) {
 
       {/* LEFT — narrative column */}
       <div style={{ position: 'absolute', top: 220, left: 160, width: 780 }}>
+
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.1 }}
+          transition={{ ...spring, delay: 0.08 }}
           className="font-mono"
-          style={{ fontSize: 20, color: 'var(--accent-gold)' }}
+          style={{ fontSize: 20, color: 'var(--accent-gold)', letterSpacing: '0.28em' }}
         >
           {data.eyebrow}
         </motion.div>
 
         {/* Mega category title */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.18 }}
+          transition={{ ...spring, delay: 0.16 }}
           className="font-section"
           style={{
             fontSize: 96,
             color: 'var(--accent-gold)',
             textTransform: 'uppercase',
             letterSpacing: '-0.01em',
-            marginTop: 12,
+            marginTop: 10,
             lineHeight: 1,
           }}
         >
           {data.title}
         </motion.div>
 
-        {/* Crimson rule */}
+        {/* Crimson rule — scaleX from left */}
         <motion.div
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
-          transition={{ delay: 0.45, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
+          transition={{ delay: 0.38, duration: 0.65, ease: easeOut }}
           style={{
             width: 120,
             height: 3,
             background: 'var(--accent-crimson)',
-            margin: '28px 0 36px',
+            margin: '24px 0 32px',
             transformOrigin: 'left',
           }}
         />
 
         {/* Editorial display headline */}
         <motion.h1
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.3 }}
+          transition={{ ...spring, delay: 0.26 }}
           className="font-display"
           style={{
             fontSize: 88,
@@ -97,16 +109,15 @@ export function CategorySlide({ data }: { data: CategorySlideData }) {
           <span className="font-display-italic">{data.display.italic}</span>
         </motion.h1>
 
-        {/* Intro body */}
+        {/* Intro body — animate to target opacity, not 1 */}
         <motion.p
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.55, duration: 0.6 }}
+          animate={{ opacity: 0.85 }}
+          transition={{ delay: 0.5, duration: 0.55, ease: easeOut }}
           className="font-body"
           style={{
             fontSize: 22,
             color: 'var(--text-ivory)',
-            opacity: 0.85,
             marginTop: 36,
             maxWidth: 640,
             lineHeight: 1.55,
@@ -115,27 +126,27 @@ export function CategorySlide({ data }: { data: CategorySlideData }) {
           {data.intro}
         </motion.p>
 
-        {/* Upsell line — elegant, no exclamation */}
+        {/* Upsell — borderTop replaces the banned borderLeft */}
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ ...spring, delay: 0.75 }}
+          transition={{ ...spring, delay: 0.7 }}
           style={{
             marginTop: 28,
-            paddingLeft: 20,
-            borderLeft: '2px solid var(--accent-gold)',
+            paddingTop: 20,
+            borderTop: '1px solid rgba(184,149,74,0.32)',
             maxWidth: 620,
           }}
         >
           <div
             className="font-mono"
-            style={{ fontSize: 14, color: 'var(--accent-gold)', marginBottom: 6 }}
+            style={{ fontSize: 13, color: 'var(--accent-gold)', marginBottom: 8, letterSpacing: '0.28em' }}
           >
             A Quiet Suggestion
           </div>
           <div
             className="font-display-italic"
-            style={{ fontSize: 22, color: 'var(--text-ivory)', lineHeight: 1.35 }}
+            style={{ fontSize: 22, color: 'var(--text-ivory)', lineHeight: 1.38, opacity: 0.9 }}
           >
             {data.upsell}
           </div>
@@ -158,23 +169,23 @@ export function CategorySlide({ data }: { data: CategorySlideData }) {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4, duration: 0.6 }}
+          transition={{ delay: 0.36, duration: 0.5, ease: easeOut }}
           className="font-mono"
-          style={{ fontSize: 16, color: 'var(--text-smoke)', marginBottom: 24 }}
+          style={{ fontSize: 15, color: 'var(--text-smoke)', marginBottom: 20, letterSpacing: '0.22em' }}
         >
-          The Menu — {String(data.items.length).padStart(2, '0')} Rituals
+          The Menu · {String(data.items.length).padStart(2, '0')} Rituals
         </motion.div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           {data.items.map((item, i) => (
             <motion.div
               key={item.name}
-              initial={{ opacity: 0, x: 12 }}
+              initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ ...spring, delay: 0.5 + i * 0.08 }}
+              transition={{ ...spring, delay: 0.46 + i * 0.055 }}
               style={{
-                borderTop: '1px solid rgba(184,149,74,0.18)',
-                padding: '18px 0 16px',
+                borderTop: '1px solid rgba(184,149,74,0.16)',
+                padding: '17px 0 15px',
               }}
             >
               <div

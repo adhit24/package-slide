@@ -1,8 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
-const spring = { type: 'spring' as const, stiffness: 100, damping: 22 };
+const spring = { type: 'spring' as const, duration: 0.55, bounce: 0.08 };
+const easeOut = [0.23, 1, 0.32, 1] as const;
 
 const hairProducts = [
   {
@@ -54,21 +55,27 @@ const fragranceProducts = [
 ───────────────────────────────────────────────────────────────── */
 
 export function ProductSlide() {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
 
-      {/* Background — all products blurred */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          backgroundImage: 'url(/brand_asset/product/all.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(36px) brightness(0.22) saturate(0.6)',
-          transform: 'scale(1.08)',
-        }}
-      />
+      {/* Background — all products blurred, Ken Burns */}
+      <div className="ken-burns-wrap">
+        <motion.div
+          initial={{ scale: 1.08 }}
+          animate={shouldReduceMotion ? {} : { scale: 1.13 }}
+          transition={{ duration: 12, ease: 'linear' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'url(/brand_asset/product/all.jpeg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(36px) brightness(0.22) saturate(0.6)',
+          }}
+        />
+      </div>
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(11,11,13,0.72)' }} />
       <div
         style={{
@@ -395,7 +402,7 @@ export function ProductSlide() {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.9, duration: 0.6 }}
+        transition={{ delay: 0.85, duration: 0.55, ease: easeOut }}
         className="font-mono"
         style={{
           position: 'absolute',

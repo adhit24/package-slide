@@ -1,9 +1,10 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { packages } from '../data';
 
-const spring = { type: 'spring' as const, stiffness: 100, damping: 22 };
+const spring = { type: 'spring' as const, duration: 0.55, bounce: 0.08 };
+const easeOut = [0.23, 1, 0.32, 1] as const;
 const romans = ['I', 'II', 'III', 'IV', 'V'];
 
 /* ─────────────────────────────────────────────────────────────────
@@ -30,6 +31,7 @@ const CARD_H = 610;
 const PHOTO_H = 390;
 
 export function PackagesSlide() {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <div style={{ position: 'absolute', inset: 0 }}>
 
@@ -202,6 +204,23 @@ export function PackagesSlide() {
                   {romans[i]}
                 </div>
 
+                {/* Hero shimmer sweep — enters once on load */}
+                {isHero && !shouldReduceMotion && (
+                  <motion.div
+                    initial={{ x: -280 }}
+                    animate={{ x: HERO_W + 80 }}
+                    transition={{ duration: 0.95, delay: 0.85, ease: easeOut }}
+                    style={{
+                      position: 'absolute',
+                      top: 0, bottom: 0,
+                      width: 200,
+                      background:
+                        'linear-gradient(90deg, transparent, rgba(255,255,255,0.07) 50%, transparent)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+                )}
+
                 {/* Hero badge */}
                 {isHero && (
                   <div
@@ -287,7 +306,7 @@ export function PackagesSlide() {
                 >
                   {pkg.items.split(/[·/]/).map((item, j) => (
                     <div key={j} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ color: 'var(--accent-gold)', opacity: 0.6, fontSize: isHero ? 10 : 8 }}>—</span>
+                      <span style={{ color: 'var(--accent-gold)', opacity: 0.55, fontSize: isHero ? 10 : 8 }}>·</span>
                       {item.trim()}
                     </div>
                   ))}
