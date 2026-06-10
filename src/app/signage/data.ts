@@ -11,7 +11,7 @@ export type SlideId =
   | 'product'
   | 'hygiene';
 
-export const SLIDE_DURATION_MS = 12000;
+export const SLIDE_DURATION_MS = 15000;
 
 export const slides: { id: SlideId; index: string }[] = [
   { id: 'opening', index: '00' },
