@@ -8,7 +8,8 @@ export type SlideId =
   | 'reservation'
   | 'special'
   | 'promo'
-  | 'product';
+  | 'product'
+  | 'hygiene';
 
 export const SLIDE_DURATION_MS = 12000;
 
@@ -23,6 +24,7 @@ export const slides: { id: SlideId; index: string }[] = [
   { id: 'special', index: '07' },
   { id: 'promo', index: '08' },
   { id: 'product', index: '09' },
+  { id: 'hygiene', index: '10' },
 ];
 
 export type ServiceItem = { name: string; desc: string };

@@ -12,6 +12,7 @@ import { SpecialServicesSlide } from './components/SpecialServicesSlide';
 import { PromoStudentSlide } from './components/PromoStudentSlide';
 import { ProductSlide } from './components/ProductSlide';
 import { OpeningAnimation } from './components/OpeningAnimation';
+import { HygieneSlide } from './components/HygieneSlide';
 
 export default function SignagePage() {
   const [active, setActive] = useState(() => {
@@ -71,6 +72,7 @@ export default function SignagePage() {
             {current.id === 'opening' && <OpeningAnimation />}
             {current.id === 'promo' && <PromoStudentSlide />}
             {current.id === 'product' && <ProductSlide />}
+            {current.id === 'hygiene' && <HygieneSlide />}
           </motion.div>
         </AnimatePresence>
 
